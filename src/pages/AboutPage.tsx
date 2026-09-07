@@ -1,68 +1,90 @@
-import { Reveal } from "@/components/Reveal";
 import { PageBanner } from "@/components/PageBanner";
-import { Link } from "react-router-dom";
 
-const aboutSections = [
+const pressQuotes = [
   {
-    title: "Our Story",
-    image: "/images/media/our-story.jpg",
-    alt: "New Valley String Band in an editorial portrait",
-    imagePosition: "object-[center_30%]",
-    text: "From study-room jam sessions to years of touring and arranging together, New Valley String Band has grown through shared listening, travel, and the slow discovery of a common musical language.",
-    link: "/our-story",
+    quote:
+      "Stretching the boundaries of Old Time and Bluegrass by blending it with Nordic folk.",
+    publication: "Americana UK",
+    href: "https://americana-uk.com/bluegrass-briefs-unspoken-tradition-square-peg-big-richard-new-valley-string-band",
   },
   {
-    title: "Our Sound",
-    image: "/images/media/our-sound.jpg?v=20260512-2",
-    alt: "New Valley String Band instruments and atmosphere",
-    imagePosition: "object-[center_42%]",
-    text: "Nordic old-time shaped by fiddle, banjo, guitar, close harmony, and arrangements that leave room for pulse, tension, atmosphere, and the quiet electricity between three musicians.",
-    link: "/our-sound",
+    quote: "An album that unites Scandinavian roots with Appalachian spirit.",
+    publication: "Musik An Sich",
+    href: "https://www.musikansich.de/review.php?id=26046",
   },
 ];
 
 export default function AboutPage() {
   return (
     <>
-      <PageBanner />
+      <PageBanner compact />
 
-      <section className="min-h-[calc(100vh-var(--nav-h))] bg-background text-primary">
-        <div className="container mx-auto px-6 pb-28 pt-12 md:px-10 md:pb-40 md:pt-16 lg:px-16 lg:pb-48 lg:pt-20">
-          <div className="mx-auto grid max-w-6xl gap-16 md:grid-cols-2 md:gap-14 lg:gap-20">
-            {aboutSections.map((section, index) => (
-              <Reveal key={section.title} delay={index * 120}>
-                <article className="group">
-                  <div className="relative overflow-hidden bg-[#734636]">
-                    <img
-                      src={section.image}
-                      alt={section.alt}
-                      className={`aspect-[16/9] w-full object-cover ${section.imagePosition} contrast-[0.92] saturate-[0.82] sepia-[0.16]`}
-                      loading="lazy"
-                    />
-                    <div className="pointer-events-none absolute inset-0 bg-primary/10 mix-blend-multiply" />
-                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_48%,rgba(27,18,14,0.22)_100%)]" />
-                  </div>
+      <section className="bg-background text-primary">
+        <div className="container mx-auto px-6 pb-20 pt-12 md:px-10 md:pb-24 md:pt-16 lg:px-10 lg:pb-28 lg:pt-12 xl:px-16">
+          <div className="mx-auto flex max-w-[1500px] flex-col gap-16 md:flex-row md:items-start md:justify-center md:gap-12 lg:gap-10 xl:gap-12">
+            <div className="min-w-0 text-left md:flex-1 lg:flex-[0_0_920px]">
+              <h1 className="font-serif text-3xl font-normal uppercase leading-tight tracking-[0.16em] text-primary md:text-[2.35rem] lg:text-[2.45rem]">
+                NEW VALLEY STRING BAND
+              </h1>
 
-                  <div className="mt-9 max-w-[32rem] border-t border-primary/18 pt-8 text-left md:mt-11 md:pt-9">
-                    <h2 className="font-serif text-3xl font-normal uppercase leading-tight tracking-[0.16em] text-primary md:text-[2.65rem]">
-                      {section.title}
-                    </h2>
-                    <p className="mt-6 text-[1.02rem] font-light leading-8 text-primary/74">
-                      {section.text}
-                    </p>
-                    <Link
-                      to={section.link}
-                      className="relative mt-9 inline-flex text-[0.78rem] font-medium uppercase tracking-[0.18em] text-primary/68 transition-colors duration-300 hover:text-primary"
-                    >
-                      <span className="relative">
-                        Read more &rarr;
-                        <span className="absolute inset-x-0 -bottom-2 h-px origin-left scale-x-0 bg-primary/62 transition-transform duration-300 group-hover:scale-x-100" />
+              <div className="mt-7 space-y-5 text-left text-[1.05rem] leading-8 text-primary/82 md:mt-8 md:leading-8 lg:max-w-[680px]">
+                <p>
+                  <strong>New Valley String Band</strong> is a Swedish trio
+                  bringing together the traditions of American old time music
+                  and Nordic folk. With fiddle, clawhammer banjo, guitar and
+                  vocals, the band moves between Appalachian and Scandinavian
+                  sounds, creating their own take on the tradition &mdash;{" "}
+                  <strong>Nordic Old-Time</strong>.
+                </p>
+
+                <p>
+                  Since releasing their self-titled debut album,{" "}
+                  <strong>New Valley</strong>, in 2023, New Valley String Band have
+                  brought their music to audiences across the Nordics and
+                  Europe. Their second album, <strong>Of Tales And Lies</strong>,
+                  released on February 14 2026, marks a new chapter for the
+                  trio, with a growing focus on original songs and tunes
+                  alongside traditional material.
+                </p>
+
+                <p>
+                  At the heart of the band is a shared love for storytelling,
+                  melody and the raw acoustic sound of string band music. Rather
+                  than simply recreating old time music, New Valley String Band
+                  lets the tradition meet their Scandinavian roots and become
+                  something of their own.
+                </p>
+              </div>
+
+              <div className="mt-9 grid gap-8 border-t border-primary/18 pt-7 text-left md:mt-10 md:grid-cols-2 md:gap-6 md:pt-8">
+                {pressQuotes.map((item) => (
+                  <a
+                    key={item.publication}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group block cursor-pointer text-primary outline-none transition duration-200 hover:-translate-y-0.5 hover:opacity-80 focus-visible:-translate-y-0.5 focus-visible:ring-1 focus-visible:ring-primary/35 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+                  >
+                    <blockquote className="text-[1.05rem] leading-8 text-primary/82 md:leading-9">
+                      <span className="inline italic">
+                        &ldquo;{item.quote}&rdquo;
+                      </span>{" "}
+                      <span className="inline whitespace-nowrap not-italic text-[0.74rem] font-medium uppercase tracking-[0.16em] text-primary/58 transition-colors duration-200 group-hover:text-primary/78 group-focus-visible:text-primary/78">
+                        &mdash; {item.publication} &#8599;
                       </span>
-                    </Link>
-                  </div>
-                </article>
-              </Reveal>
-            ))}
+                    </blockquote>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex justify-center md:w-[300px] md:flex-none md:justify-end md:pt-24 lg:w-[420px] lg:-translate-x-12 xl:w-[470px] xl:-translate-x-16">
+              <img
+                src="/images/media/our-story.jpg"
+                alt="New Valley String Band"
+                className="aspect-[4/3] w-full max-w-[470px] object-cover object-[center_30%] contrast-[0.92] saturate-[0.82] sepia-[0.16]"
+              />
+            </div>
           </div>
         </div>
       </section>

@@ -54,16 +54,15 @@ export function Footer({ variant = "default" }: FooterProps) {
     <footer className="footer relative overflow-hidden bg-primary text-primary-foreground">
       <div className="absolute inset-0">
         <img
-          src="/images/footer/footer-new-valley.jpg?v=20260510-2"
+          src="/images/media/Luciebascoul_New Valley 3.jpg"
           alt="Dark leafy background"
-          className="h-full w-full object-cover object-[1%_center] opacity-60"
+          className="absolute left-0 top-0 h-screen min-h-screen w-full -scale-x-100 object-cover object-[50%_50%] md:object-[40%_50%]"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-black/72" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/72 via-primary/60 to-black/50" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-black/20" />
       </div>
 
-      <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-6 py-12 text-center md:py-14">
+      <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-6 py-12 text-center md:py-8">
         <img
           src="/images/logo-white.png"
           alt="New Valley String Band"

@@ -5,7 +5,7 @@ import { PageBanner } from "@/components/PageBanner";
 export default function ContactPage() {
   return (
     <>
-      <PageBanner />
+      <PageBanner compact />
 
       <section className="bg-background text-primary">
         <div className="container mx-auto max-w-7xl px-6 py-16 md:px-10 md:py-20 lg:px-16 lg:py-24">

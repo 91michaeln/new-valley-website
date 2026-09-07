@@ -1,28 +1,25 @@
 import { Reveal } from "@/components/Reveal";
 import { PageBanner } from "@/components/PageBanner";
 import { Download } from "lucide-react";
+import { useState } from "react";
 
 interface FeaturedVideo {
   title: string;
   embedUrl: string;
-  description: string;
 }
 
 const featuredVideos: FeaturedVideo[] = [
   {
-    title: "Festival Reel",
+    title: "Live @ Grenna Bluegrass Festival",
     embedUrl: "https://www.youtube.com/embed/a59MuyVXomw",
-    description: "Live at Grenna Bluegrass Festival.",
   },
   {
     title: "Drunken Hiccups",
     embedUrl: "https://www.youtube.com/embed/vOtPENiY5YM",
-    description: "Original Nordic old-time music.",
   },
   {
     title: "Flight of the Pelican",
     embedUrl: "https://www.youtube.com/embed/svbC1Gs7iDQ",
-    description: "Interplay, groove, and acoustic musicianship.",
   },
 ];
 
@@ -70,13 +67,43 @@ const galleryItems: GalleryItem[] = [
   },
 ];
 
-const firstRow = galleryItems.slice(0, 4);
-const secondRow = galleryItems.slice(4);
+const featuredGalleryItem = galleryItems[0];
+const stackedGalleryItems = galleryItems.slice(1, 3);
+const additionalGalleryItems = galleryItems.slice(3);
+
+function PressPhoto({
+  image,
+  className = "",
+}: {
+  image: GalleryItem;
+  className?: string;
+}) {
+  return (
+    <figure className={`group relative overflow-hidden bg-muted ${className}`}>
+      <img
+        src={image.src}
+        alt={image.alt}
+        className={`h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025] ${image.objectPosition ?? "object-center"}`}
+        loading="lazy"
+      />
+      <a
+        href={image.src}
+        download
+        aria-label={`Download ${image.alt}`}
+        className="absolute bottom-3 right-3 inline-flex h-9 w-9 items-center justify-center border border-white/40 bg-black/35 text-white/90 backdrop-blur-sm transition-colors hover:border-white/80 hover:bg-white/90 hover:text-foreground"
+      >
+        <Download className="h-4 w-4" aria-hidden="true" />
+      </a>
+    </figure>
+  );
+}
 
 export default function MediaPage() {
+  const [showMorePhotos, setShowMorePhotos] = useState(false);
+
   return (
     <>
-      <PageBanner />
+      <PageBanner compact />
 
       <div className="container mx-auto max-w-7xl px-6 py-12 md:px-10 md:py-16 lg:px-12">
         <section>
@@ -86,66 +113,66 @@ export default function MediaPage() {
                 Press Photos
               </h1>
               <p className="mt-3 text-sm tracking-[0.08em] text-muted-foreground/72">
-                Photos &copy; Lucie Bascoul
+                Downloadable press photos &middot; Photos &copy; Lucie Bascoul
               </p>
             </div>
           </Reveal>
 
-          <div className="mx-auto grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {firstRow.map((image, index) => (
-              <Reveal key={image.src} delay={index * 60}>
-                <figure className="group relative aspect-[4/3] overflow-hidden bg-muted">
-                  <img
-                    src={image.src}
-                    alt={image.alt}
-                    className={`h-full w-full object-cover ${image.objectPosition ?? "object-center"}`}
-                    loading="lazy"
-                  />
-                  <a
-                    href={image.src}
-                    download
-                    aria-label={`Download ${image.alt}`}
-                    className="absolute bottom-3 right-3 inline-flex h-9 w-9 items-center justify-center border border-white/40 bg-black/35 text-white/90 backdrop-blur-sm transition-colors hover:border-white/80 hover:bg-white/90 hover:text-foreground"
-                  >
-                    <Download className="h-4 w-4" aria-hidden="true" />
-                  </a>
-                </figure>
-              </Reveal>
-            ))}
+          <div className="mx-auto grid grid-cols-1 gap-5 lg:grid-cols-12 lg:gap-6">
+            <Reveal className="lg:col-span-7 lg:row-span-2" delay={0}>
+              <PressPhoto
+                image={featuredGalleryItem}
+                className="aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[620px]"
+              />
+            </Reveal>
+
+            <div className="grid grid-cols-1 gap-5 lg:col-span-5 lg:grid-rows-2 lg:gap-6">
+              {stackedGalleryItems.map((image, index) => (
+                <Reveal key={image.src} className="lg:h-full" delay={(index + 1) * 60}>
+                  <PressPhoto image={image} className="aspect-[4/3] lg:aspect-auto lg:h-full" />
+                </Reveal>
+              ))}
+            </div>
           </div>
 
-          <div className="mx-auto mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {secondRow.map((image, index) => (
-              <Reveal key={image.src} delay={(index + firstRow.length) * 60}>
-                <figure className="group relative aspect-[4/3] overflow-hidden bg-muted">
-                  <img
-                    src={image.src}
-                    alt={image.alt}
-                    className={`h-full w-full object-cover ${image.objectPosition ?? "object-center"}`}
-                    loading="lazy"
-                  />
-                  <a
-                    href={image.src}
-                    download
-                    aria-label={`Download ${image.alt}`}
-                    className="absolute bottom-3 right-3 inline-flex h-9 w-9 items-center justify-center border border-white/40 bg-black/35 text-white/90 backdrop-blur-sm transition-colors hover:border-white/80 hover:bg-white/90 hover:text-foreground"
-                  >
-                    <Download className="h-4 w-4" aria-hidden="true" />
-                  </a>
-                </figure>
-              </Reveal>
-            ))}
+          <div
+            className={`overflow-hidden transition-[max-height,opacity] duration-700 ease-out ${
+              showMorePhotos ? "max-h-[2400px] opacity-100" : "max-h-0 opacity-0"
+            }`}
+          >
+            <div className="mx-auto mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+              {additionalGalleryItems.map((image, index) => (
+                <Reveal key={image.src} delay={index * 60}>
+                  <PressPhoto image={image} className="aspect-[4/3]" />
+                </Reveal>
+              ))}
+            </div>
           </div>
+
+          {additionalGalleryItems.length > 0 && (
+            <div className="mt-9 text-center md:mt-10">
+              <button
+                type="button"
+                onClick={() => setShowMorePhotos((current) => !current)}
+                aria-expanded={showMorePhotos}
+                className="inline-flex items-center justify-center border border-foreground/20 px-6 py-3 text-xs font-medium uppercase tracking-[0.18em] text-foreground transition-colors hover:border-foreground/50 hover:bg-foreground hover:text-background"
+              >
+                {showMorePhotos ? "VIEW LESS PHOTOS ↑" : "VIEW MORE PHOTOS ↓"}
+              </button>
+            </div>
+          )}
         </section>
 
-        <section className="pt-16 md:pt-20">
+        <div className="my-10 h-px bg-border md:my-12" aria-hidden="true" />
+
+        <section className="lg:-mx-6 xl:-mx-10">
           <div className="mb-7 text-center">
             <h2 className="font-serif text-4xl font-normal uppercase leading-tight tracking-[0.16em] text-foreground md:text-5xl">
               Videos
             </h2>
           </div>
 
-          <div className="mx-auto grid gap-9 md:grid-cols-3 md:gap-6">
+          <div className="mx-auto grid gap-9 md:grid-cols-3 md:gap-7 lg:gap-8">
             {featuredVideos.map((video, index) => (
               <Reveal key={video.embedUrl} delay={index * 70}>
                 <article>
@@ -162,9 +189,6 @@ export default function MediaPage() {
                   <h3 className="mt-4 font-serif text-lg leading-tight text-[hsl(25_30%_25%)]/90 md:text-xl">
                     {video.title}
                   </h3>
-                  <p className="mt-1.5 text-sm leading-6 text-muted-foreground/86">
-                    {video.description}
-                  </p>
                 </article>
               </Reveal>
             ))}

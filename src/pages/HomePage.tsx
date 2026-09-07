@@ -1,4 +1,3 @@
-import { News } from "@/components/News";
 import { MailingList } from "@/components/MailingList";
 
 export default function HomePage() {
@@ -16,11 +15,7 @@ export default function HomePage() {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-black/20" />
       </section>
 
-      <div className="pointer-events-none relative z-20 h-0">
-        <div className="absolute inset-x-0 top-0 h-px bg-white/35" />
-      </div>
-
-      <News />
+      <div className="h-px w-full bg-black/20" />
 
       <MailingList />
     </>

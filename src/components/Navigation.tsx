@@ -112,7 +112,7 @@ export function Navigation() {
           {/* Social Icons */}
           <div className="flex items-center gap-4 ml-4">
           <a
-            href="https://youtube.com"
+            href="https://www.youtube.com/@newvalleystringband9941"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="YouTube"
@@ -124,7 +124,7 @@ export function Navigation() {
             <Youtube className="h-5 w-5" />
           </a>
           <a
-            href="https://instagram.com"
+            href="https://www.instagram.com/new_valley_string_band/"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
@@ -136,7 +136,7 @@ export function Navigation() {
             <Instagram className="h-5 w-5" />
           </a>
           <a
-            href="https://facebook.com"
+            href="https://www.facebook.com/newvalleystringband"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Facebook"
@@ -197,7 +197,7 @@ export function Navigation() {
             <div className="mt-4 flex items-center gap-3 border-t pt-4">
               <Button variant="ghost" size="icon" asChild>
                 <a
-                  href="https://youtube.com"
+                  href="https://www.youtube.com/@newvalleystringband9941"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="YouTube"
@@ -207,7 +207,7 @@ export function Navigation() {
               </Button>
               <Button variant="ghost" size="icon" asChild>
                 <a
-                  href="https://instagram.com"
+                  href="https://www.instagram.com/new_valley_string_band/"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Instagram"
@@ -217,7 +217,7 @@ export function Navigation() {
               </Button>
               <Button variant="ghost" size="icon" asChild>
                 <a
-                  href="https://facebook.com"
+                  href="https://www.facebook.com/newvalleystringband"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Facebook"
