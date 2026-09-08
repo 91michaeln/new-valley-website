@@ -153,6 +153,17 @@ All colors MUST be HSL.
     transform: translateY(0);
     animation: fade-in-up 0.6s ease both;
   }
+
+  .footer-sound-image {
+    transform: translateX(-65%) scale(2.7);
+    transform-origin: center center;
+  }
+
+  @media (min-width: 768px) {
+    .footer-sound-image {
+      transform: none;
+    }
+  }
 }
 
 @keyframes fade-in-up {

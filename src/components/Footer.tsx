@@ -54,9 +54,9 @@ export function Footer({ variant = "default" }: FooterProps) {
     <footer className="footer relative overflow-hidden bg-primary text-primary-foreground">
       <div className="absolute inset-0">
         <img
-          src="/images/media/Luciebascoul_New Valley 3.jpg"
+          src="/images/media/our-sound.jpg"
           alt="Dark leafy background"
-          className="absolute left-0 top-0 h-screen min-h-screen w-full -scale-x-100 object-cover object-[50%_50%] md:object-[40%_50%]"
+          className="footer-sound-image absolute left-0 top-0 h-full min-h-full w-full object-cover object-[46%_35%] md:h-screen md:min-h-screen md:object-[50%_24%] lg:object-[50%_25%]"
           loading="lazy"
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-black/20" />
@@ -66,7 +66,7 @@ export function Footer({ variant = "default" }: FooterProps) {
         <img
           src="/images/logo-white.png"
           alt="New Valley String Band"
-          className="h-auto w-36 opacity-90 md:w-44"
+          className="h-auto w-36 opacity-90 md:w-44 lg:w-[12.5rem]"
           loading="lazy"
         />
 
@@ -78,7 +78,7 @@ export function Footer({ variant = "default" }: FooterProps) {
             className="text-primary-foreground/62 transition-colors duration-300 hover:text-primary-foreground/90"
             aria-label="YouTube"
           >
-            <Youtube className="h-5 w-5" />
+            <Youtube className="h-5 w-5 lg:h-[1.375rem] lg:w-[1.375rem]" />
           </a>
           <a
             href="https://instagram.com"
@@ -87,7 +87,7 @@ export function Footer({ variant = "default" }: FooterProps) {
             className="text-primary-foreground/62 transition-colors duration-300 hover:text-primary-foreground/90"
             aria-label="Instagram"
           >
-            <Instagram className="h-5 w-5" />
+            <Instagram className="h-5 w-5 lg:h-[1.375rem] lg:w-[1.375rem]" />
           </a>
           <a
             href="https://facebook.com"
@@ -96,7 +96,7 @@ export function Footer({ variant = "default" }: FooterProps) {
             className="text-primary-foreground/62 transition-colors duration-300 hover:text-primary-foreground/90"
             aria-label="Facebook"
           >
-            <Facebook className="h-5 w-5" />
+            <Facebook className="h-5 w-5 lg:h-[1.375rem] lg:w-[1.375rem]" />
           </a>
         </div>
       </div>

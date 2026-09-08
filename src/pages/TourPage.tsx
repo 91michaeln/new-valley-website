@@ -194,17 +194,6 @@ export default function TourPage() {
 
       <div className="container mx-auto max-w-7xl px-6 py-12 md:px-10 md:py-16 lg:px-12">
         <Reveal>
-          <div className="mb-10 text-center md:mb-12">
-            <h1 className="font-serif text-4xl font-normal uppercase leading-tight tracking-[0.16em] text-foreground md:text-5xl">
-              Tour
-            </h1>
-            <p className="mx-auto mt-3 max-w-3xl text-sm tracking-[0.08em] text-muted-foreground/72 md:text-base">
-              Upcoming concerts and selected performances across Europe.
-            </p>
-          </div>
-        </Reveal>
-
-        <Reveal delay={120}>
           <section
             aria-labelledby="upcoming-shows-heading"
             className="mx-auto"

@@ -5,9 +5,17 @@ export default function HomePage() {
     <>
       <section className="relative min-h-screen">
         <img
+          src="/images/media/our-story.jpg"
+          alt="New Valley String Band performing live (photo: Lucie Bascoul)"
+          className="absolute inset-0 h-full w-full object-cover object-[50%_50%] md:hidden"
+          decoding="async"
+          loading="eager"
+        />
+
+        <img
           src="/images/media/Luciebascoul_New Valley 3.jpg"
           alt="New Valley String Band performing live (photo: Lucie Bascoul)"
-          className="absolute inset-0 h-full w-full object-cover object-[50%_50%] md:object-[40%_50%]"
+          className="absolute inset-0 hidden h-full w-full object-cover object-[40%_50%] md:block"
           decoding="async"
           loading="eager"
         />
