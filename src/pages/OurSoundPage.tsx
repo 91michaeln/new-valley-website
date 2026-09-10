@@ -1,5 +1,6 @@
 import { Reveal } from "@/components/Reveal";
 import { PageBanner } from "@/components/PageBanner";
+import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 const albums = [
@@ -103,12 +104,9 @@ export default function OurSoundPage() {
 
           <Reveal delay={220}>
             <div className="mx-auto mt-16 max-w-5xl md:mt-20">
-              <Link
-                to="/about"
-                className="inline-flex rounded-sm border border-primary/60 bg-primary px-5 py-2.5 text-[0.74rem] font-medium uppercase tracking-[0.16em] text-primary-foreground shadow-none transition-colors duration-300 hover:border-primary/80 hover:bg-primary/90"
-              >
-                &larr; Back
-              </Link>
+              <Button asChild variant="cta" size="cta">
+                <Link to="/about">&larr; Back</Link>
+              </Button>
             </div>
           </Reveal>
         </div>

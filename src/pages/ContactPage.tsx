@@ -1,6 +1,9 @@
 import { Reveal } from "@/components/Reveal";
 import { Contact } from "@/components/Contact";
 
+const EPK_URL =
+  "https://drive.google.com/drive/folders/1bja-sdkyBMaA5YFapY9OTnWrH4p4FrKr?usp=sharing";
+
 export default function ContactPage() {
   return (
     <>
@@ -14,6 +17,17 @@ export default function ContactPage() {
                 </h1>
                 <p className="mt-5 max-w-md text-[1.02rem] font-light leading-8 text-primary/72">
                   For booking, press, and general enquiries, please contact us below.
+                </p>
+                <p className="mt-4 text-sm leading-6 text-primary/68">
+                  Looking for press material?{" "}
+                  <a
+                    href={EPK_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium underline decoration-primary/24 underline-offset-4 transition-colors hover:text-primary hover:decoration-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+                  >
+                    View our EPK &rarr;
+                  </a>
                 </p>
 
                 <div className="mt-9 space-y-8 text-primary/82">

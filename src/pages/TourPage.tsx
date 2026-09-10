@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ChevronDown, ExternalLink } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
+import { Button } from "@/components/ui/button";
 
 const ARTIST_ID = "id_15664360";
 const BANDSINTOWN_APP_ID = "de1455a037e5fa714d2b6bacee6fd8c6";
@@ -240,25 +241,27 @@ function EventRow({
       {shouldShowActions && (
         <div className="flex flex-wrap items-center gap-3 md:justify-end">
           {eventUrl && (
-            <a
-              href={eventUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-9 items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-primary/80 transition-colors duration-300 hover:text-primary"
-            >
-              Event
-              <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-            </a>
+            <Button asChild variant="cta" size="cta" className="h-9 px-4">
+              <a
+                href={eventUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Event
+                <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+              </a>
+            </Button>
           )}
           {ticketUrl && (
-            <a
-              href={ticketUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-9 items-center justify-center border border-primary bg-primary px-4 text-xs font-semibold uppercase tracking-[0.16em] text-primary-foreground transition-colors duration-300 hover:bg-transparent hover:text-primary"
-            >
-              Tickets
-            </a>
+            <Button asChild variant="cta" size="cta" className="h-9 px-4">
+              <a
+                href={ticketUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Tickets
+              </a>
+            </Button>
           )}
         </div>
       )}
@@ -417,11 +420,13 @@ export default function TourPage() {
                       )}
 
                       <div className="mt-6 flex justify-center md:mt-7">
-                        <button
+                        <Button
+                          variant="cta"
+                          size="cta"
                           type="button"
                           aria-expanded={areOlderShowsOpen}
                           aria-controls="older-past-shows-panel"
-                          className="group inline-flex cursor-pointer items-center gap-2 border-b border-primary/20 pb-1 text-xs font-semibold uppercase tracking-[0.18em] text-primary/68 transition-colors duration-300 hover:border-primary/45 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-4 focus-visible:ring-offset-[#F4F0E8]"
+                          className="group"
                           onClick={() => setAreOlderShowsOpen((isOpen) => !isOpen)}
                         >
                           {areOlderShowsOpen ? "Hide older shows" : "View all past shows"}
@@ -431,7 +436,7 @@ export default function TourPage() {
                             }`}
                             aria-hidden="true"
                           />
-                        </button>
+                        </Button>
                       </div>
                     </>
                   )}

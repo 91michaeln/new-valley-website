@@ -54,7 +54,7 @@ export function Concerts({ limit, compact = false }: ConcertsProps) {
             </div>
 
             {concert.ticketUrl && (
-              <Button asChild variant={compact ? "outline" : "default"} size="sm" className={cn("w-full", compact && "h-8 rounded-sm text-xs")}>
+              <Button asChild variant="cta" size="cta" className={cn("w-full", compact && "h-8 px-4 text-xs")}>
                 <a
                   href={concert.ticketUrl}
                   target="_blank"

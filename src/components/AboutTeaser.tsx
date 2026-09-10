@@ -28,7 +28,7 @@ export function AboutTeaser() {
             <p className="mb-6 text-lg leading-relaxed text-muted-foreground">
               With guitar, fiddle, and banjo, they create a powerful, energetic sound that honors the past while breathing new life into timeless melodies.
             </p>
-            <Button asChild variant="default" size="lg" className="w-fit">
+            <Button asChild variant="cta" size="cta" className="w-fit">
               <Link to="/about">Read More</Link>
             </Button>
           </div>

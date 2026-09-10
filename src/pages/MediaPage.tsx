@@ -1,4 +1,5 @@
 import { Reveal } from "@/components/Reveal";
+import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { useState } from "react";
 
@@ -69,6 +70,8 @@ const galleryItems: GalleryItem[] = [
 const featuredGalleryItem = galleryItems[0];
 const stackedGalleryItems = galleryItems.slice(1, 3);
 const additionalGalleryItems = galleryItems.slice(3);
+const EPK_URL =
+  "https://drive.google.com/drive/folders/1bja-sdkyBMaA5YFapY9OTnWrH4p4FrKr?usp=sharing";
 
 function PressPhoto({
   image,
@@ -110,8 +113,17 @@ export default function MediaPage() {
                 Press Photos
               </h1>
               <p className="mt-3 text-sm tracking-[0.08em] text-muted-foreground/72">
-                Downloadable press photos &middot; Photos &copy; Lucie Bascoul
+                Downloadable press photos &amp; EPK &middot; Photos &copy; Lucie Bascoul
               </p>
+              <Button asChild variant="cta" size="cta" className="mt-5">
+                <a
+                  href={EPK_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View EPK &rarr;
+                </a>
+              </Button>
             </div>
           </Reveal>
 
@@ -148,14 +160,15 @@ export default function MediaPage() {
 
           {additionalGalleryItems.length > 0 && (
             <div className="mt-9 text-center md:mt-10">
-              <button
+              <Button
+                variant="cta"
+                size="cta"
                 type="button"
                 onClick={() => setShowMorePhotos((current) => !current)}
                 aria-expanded={showMorePhotos}
-                className="inline-flex items-center justify-center border border-foreground/20 px-6 py-3 text-xs font-medium uppercase tracking-[0.18em] text-foreground transition-colors hover:border-foreground/50 hover:bg-foreground hover:text-background"
               >
                 {showMorePhotos ? "VIEW LESS PHOTOS ↑" : "VIEW MORE PHOTOS ↓"}
-              </button>
+              </Button>
             </div>
           )}
         </section>

@@ -110,9 +110,10 @@ export function Contact() {
 
         <Button
           type="submit"
-          size="lg"
+          variant="cta"
+          size="cta"
           disabled={isSubmitting}
-          className="mt-2 rounded-none border border-primary bg-primary px-8 text-[0.78rem] font-medium uppercase tracking-[0.16em] text-primary-foreground shadow-none transition-colors hover:border-primary/90 hover:bg-primary/90"
+          className="mt-2 px-8"
         >
           {isSubmitting ? "Sending..." : "Send Message"}
         </Button>

@@ -39,7 +39,7 @@ export function LatestRelease() {
               </blockquote>
 
               <div className="flex flex-wrap gap-3 pt-1">
-                <Button asChild variant="default">
+                <Button asChild variant="cta" size="cta">
                   <a 
                     href="https://open.spotify.com/album/1iFw1XVDNdjjtON1qFZGuv?si=Vcn6LUoCRL-nlQInG5EHpg" 
                     target="_blank" 
@@ -49,7 +49,7 @@ export function LatestRelease() {
                     Listen on Spotify
                   </a>
                 </Button>
-                <Button asChild variant="outline">
+                <Button asChild variant="cta" size="cta">
                   <a 
                     href="https://youtube.com/playlist?list=OLAK5uy_k3aK8cedYwq2Wrfz1LJr79r6KYsBWuAsg&si=PFJAIqSt3lDUXxmw" 
                     target="_blank" 

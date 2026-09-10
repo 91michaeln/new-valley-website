@@ -40,7 +40,8 @@ export function MailingList() {
                 />
                 <Button
                   type="submit"
-                  className="h-11 rounded-sm border border-primary/60 bg-primary px-6 text-sm text-primary-foreground shadow-none transition-colors duration-300 hover:border-primary/80 hover:bg-primary/90"
+                  variant="cta"
+                  size="cta"
                 >
                   Subscribe
                 </Button>
