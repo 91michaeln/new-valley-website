@@ -1,252 +1,445 @@
+import { useEffect, useMemo, useState } from "react";
+import { ChevronDown, ExternalLink } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
-import { PageBanner } from "@/components/PageBanner";
 
-interface Show {
-  date: string;
-  venue: string;
-  city: string;
-  country: string;
+const ARTIST_ID = "id_15664360";
+const BANDSINTOWN_APP_ID = "de1455a037e5fa714d2b6bacee6fd8c6";
+const BANDSINTOWN_EVENTS_URL = `https://rest.bandsintown.com/artists/${ARTIST_ID}/events`;
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+interface BandsintownOffer {
+  status?: string;
+  type?: string;
+  url?: string;
 }
 
-interface ShowYear {
-  year: string;
-  shows: Show[];
+interface BandsintownVenue {
+  name?: string;
+  city?: string;
+  country?: string;
+  region?: string;
+  url?: string;
 }
 
-const upcomingShows: Show[] = [
-  { date: "17 Jul 2026", venue: "Burgruine", city: "Runding", country: "Germany" },
-  { date: "19 Jul 2026", venue: "Vintage Pub", city: "Munich", country: "Germany" },
-  { date: "20 Jul 2026", venue: "Illertal Cowboys", city: "Vöhringen", country: "Germany" },
-  { date: "21 Jul 2026", venue: "Alter", city: "Mannheim", country: "Germany" },
-  { date: "22 Jul 2026", venue: "Heinrich – Das Wirtshaus", city: "Braunschweig", country: "Germany" },
-  { date: "23 Jul 2026", venue: "Kulturhaus Insel", city: "Berlin", country: "Germany" },
-  { date: "25 Jul 2026", venue: "Vinterviken Country & Bluegrass", city: "Stockholm", country: "Sweden" },
-  { date: "8 Aug 2026", venue: "Private Party", city: "—", country: "Sweden" },
-  { date: "29 Aug 2026", venue: "Dunmore East Bluegrass Festival", city: "Dunmore East", country: "Ireland" },
-];
-
-const pastShowsByYear: ShowYear[] = [
-  {
-    year: "2025",
-    shows: [
-      { date: "13 Feb", venue: "Roots at Ebenezer's", city: "Crewe", country: "United Kingdom" },
-      { date: "15 Feb", venue: "Gainsborough Festival", city: "Gainsborough", country: "United Kingdom" },
-      { date: "16 Feb", venue: "Gathering South", city: "Glasgow", country: "Scotland" },
-      { date: "17 Feb", venue: "Royal Bar", city: "Lockerbie", country: "Scotland" },
-      { date: "20 Feb", venue: "House Concert", city: "London", country: "United Kingdom" },
-      { date: "21 Feb", venue: "Green Note", city: "London", country: "United Kingdom" },
-      { date: "23 Feb", venue: "The Bell Inn", city: "Bath", country: "United Kingdom" },
-      { date: "3 Apr", venue: "Private Concert (Tuborg Slottet)", city: "Malmö", country: "Sweden" },
-      { date: "25 Apr", venue: "Nygatan 6", city: "Växjö", country: "Sweden" },
-      { date: "25 Apr", venue: "Private Concert", city: "Jönköping", country: "Sweden" },
-      { date: "31 May", venue: "Haga Bluegrass Festival", city: "Gothenburg", country: "Sweden" },
-      { date: "7 Jun", venue: "Arisaig Bluegrass Festival", city: "Arisaig", country: "Scotland" },
-      { date: "20 Jul", venue: "Lokaal 42", city: "Helmond", country: "Netherlands" },
-      { date: "21 Jul", venue: "Roots in het Park", city: "Aarschot", country: "Belgium" },
-      { date: "23 Jul", venue: "'t Stamineeke Webbekom", city: "Diest", country: "Belgium" },
-      { date: "24 Jul", venue: "Muziekcafé Clouso", city: "Meppel", country: "Netherlands" },
-      { date: "25 Jul", venue: "Zilleghem Folk", city: "Zillebeke", country: "Belgium" },
-      { date: "26 Jul", venue: "Mandy's Lounge", city: "Homburg", country: "Germany" },
-      { date: "27 Jul", venue: "The Shakespeare Pub", city: "Herdecke", country: "Germany" },
-      { date: "28 Jul", venue: "Kulturhaus Insel", city: "Berlin", country: "Germany" },
-      { date: "30 Jul", venue: "Tonelli's", city: "Leipzig", country: "Germany" },
-      { date: "1 Aug", venue: "DRK-Kaufbar", city: "Braunschweig", country: "Germany" },
-      { date: "2 Aug", venue: "Q Café", city: "Marburg", country: "Germany" },
-      { date: "8 Aug", venue: "Festival Herbe Bleue", city: "La Croix-du-Liège", country: "France" },
-      { date: "9 Aug", venue: "Private Wedding", city: "—", country: "France" },
-      { date: "16 Aug", venue: "Private Concert", city: "Hillerød", country: "Denmark" },
-      { date: "18 Aug", venue: "Ramløse Church", city: "Ramløse", country: "Denmark" },
-      { date: "6 Sep", venue: "NGBG Festival", city: "Malmö", country: "Sweden" },
-    ],
-  },
-  {
-    year: "2024",
-    shows: [
-      { date: "8 Apr", venue: "Bjärred Församling", city: "Bjärred", country: "Sweden" },
-      { date: "19 Jun", venue: "Wintercoat", city: "Sabro", country: "Denmark" },
-      { date: "22 Jun", venue: "Amate Galli", city: "Roeselare", country: "Belgium" },
-      { date: "24 Jun", venue: "Trefpunt", city: "Ghent", country: "Belgium" },
-      { date: "26 Jun", venue: "Boomcafé", city: "Brussels", country: "Belgium" },
-      { date: "28 Jun", venue: "Zottegem", city: "Zottegem", country: "Belgium" },
-      { date: "30 Jun", venue: "Rotterdam Bluegrass Festival", city: "Rotterdam", country: "Netherlands" },
-      { date: "8 Jul", venue: "Fosie Church", city: "Malmö", country: "Sweden" },
-      { date: "13 Jul", venue: "Nääsville Bluegrass Festival", city: "Ätran", country: "Sweden" },
-      { date: "17 Aug", venue: "Grenna Bluegrass Festival", city: "Gränna", country: "Sweden" },
-    ],
-  },
-  {
-    year: "2023",
-    shows: [
-      { date: "29 Apr", venue: "Växjö Country Roots", city: "Växjö", country: "Sweden" },
-      { date: "20 May", venue: "Medley", city: "Malmö", country: "Sweden" },
-      { date: "27 May", venue: "Konsert i Ask", city: "—", country: "Sweden" },
-      { date: "2 Aug", venue: "Ethno Flanders", city: "—", country: "Belgium" },
-      { date: "5 Aug", venue: "La Roche Bluegrass Festival", city: "La Roche-sur-Foron", country: "France" },
-      { date: "8 Aug", venue: "Hafebar", city: "Solothurn", country: "Switzerland" },
-      { date: "9 Aug", venue: "Interlaken Restaurant", city: "Interlaken", country: "Switzerland" },
-      { date: "10 Aug", venue: "Rebleuten", city: "Thun", country: "Switzerland" },
-      { date: "11 Aug", venue: "Wolfratshausen", city: "Munich", country: "Germany" },
-      { date: "13 Aug", venue: "Bluegrass Theatre", city: "Ostrava", country: "Czech Republic" },
-      { date: "31 Aug", venue: "KoM Musik & Bar", city: "Gothenburg", country: "Sweden" },
-      { date: "2 Sep", venue: "Folk på Vänna", city: "Mossviken Vänna", country: "Sweden" },
-      { date: "30 Sep", venue: "Aarhus Folk Festival", city: "Aarhus", country: "Denmark" },
-    ],
-  },
-  {
-    year: "2022",
-    shows: [
-      { date: "22 Apr", venue: "Nordic Folk Alliance", city: "Gothenburg", country: "Sweden" },
-      { date: "27 May", venue: "Musikens Hus", city: "Katrineholm", country: "Sweden" },
-      { date: "28 May", venue: "Private Wedding", city: "Örebro", country: "Sweden" },
-      { date: "8 Jul", venue: "Strenger i Gress", city: "Vikersund", country: "Norway" },
-      { date: "13 Aug", venue: "Krusenstiernska Gården", city: "Kalmar", country: "Sweden" },
-      { date: "20 Aug", venue: "Grenna Bluegrass Festival", city: "Gränna", country: "Sweden" },
-      { date: "31 Aug", venue: "Nordic Nights Rehab (with Buster Sledge)", city: "Malmö", country: "Sweden" },
-      { date: "7 Oct", venue: "Norrköpings Folkmusikfestival", city: "Norrköping", country: "Sweden" },
-    ],
-  },
-];
-
-function getLocation(show: Show) {
-  return show.city === "—" ? show.country : `${show.city}, ${show.country}`;
+interface BandsintownEvent {
+  id: string;
+  datetime: string;
+  title?: string;
+  description?: string;
+  url?: string;
+  offers?: BandsintownOffer[];
+  venue?: BandsintownVenue;
 }
 
-const pastShowColumns = pastShowsByYear.reduce<ShowYear[][]>(
-  (columns, group, index) => {
-    const position = index % 4;
-    const columnIndex = position === 0 || position === 3 ? 0 : 1;
+interface TourState {
+  upcoming: BandsintownEvent[];
+  past: BandsintownEvent[];
+  isLoading: boolean;
+  error: string | null;
+}
 
-    columns[columnIndex].push(group);
-    return columns;
-  },
-  [[], []],
-);
+function getEventsUrl(date: "upcoming" | "past") {
+  const params = new URLSearchParams({
+    app_id: BANDSINTOWN_APP_ID,
+    date,
+  });
 
-function UpcomingShowRow({ show }: { show: Show }) {
-  const location = getLocation(show);
+  return `${BANDSINTOWN_EVENTS_URL}?${params.toString()}`;
+}
 
+async function fetchEvents(date: "upcoming" | "past", signal: AbortSignal) {
+  const response = await fetch(getEventsUrl(date), { signal });
+
+  if (!response.ok) {
+    throw new Error(`Bandsintown returned ${response.status} for ${date} events.`);
+  }
+
+  const events = await response.json();
+  return Array.isArray(events) ? (events as BandsintownEvent[]) : [];
+}
+
+function getLocalDateParts(datetime: string) {
+  const [datePart, timePart = ""] = datetime.split("T");
+  const [year, month, day] = datePart.split("-").map(Number);
+  const [hour, minute] = timePart.split(":");
+
+  return {
+    day: Number.isFinite(day) ? day : null,
+    month: Number.isFinite(month) ? month : null,
+    monthLabel: Number.isFinite(month) ? MONTHS[month - 1] : "",
+    time: hour && minute && `${hour}:${minute}` !== "00:00" ? `${hour}:${minute}` : "",
+    year: Number.isFinite(year) ? String(year) : "",
+  };
+}
+
+function formatLocalDateTime(datetime: string) {
+  const { day, monthLabel, time, year } = getLocalDateParts(datetime);
+
+  if (!day || !monthLabel || !year) {
+    return "";
+  }
+
+  const formattedDate = `${monthLabel.toUpperCase()}. ${day}, ${year}`;
+
+  if (!time) {
+    return formattedDate;
+  }
+
+  const [rawHour, rawMinute] = time.split(":").map(Number);
+  const period = rawHour >= 12 ? "PM" : "AM";
+  const hour = rawHour % 12 || 12;
+  const minute = String(rawMinute).padStart(2, "0");
+
+  return `${formattedDate} @ ${hour}:${minute} ${period}`;
+}
+
+function getLocation(event: BandsintownEvent) {
+  const city = event.venue?.city?.trim();
+  const country = event.venue?.country?.trim();
+
+  return [city, country].filter(Boolean).join(", ");
+}
+
+function getEventName(event: BandsintownEvent) {
+  return event.title?.trim() || event.venue?.name?.trim() || "New Valley String Band";
+}
+
+function getVenueName(event: BandsintownEvent) {
+  const eventName = getEventName(event);
+  const venueName = event.venue?.name?.trim();
+
+  return venueName && venueName !== eventName ? venueName : "";
+}
+
+function getTicketUrl(event: BandsintownEvent) {
+  const ticketOffer = event.offers?.find((offer) => isValidUrl(offer.url));
+
+  return ticketOffer?.url;
+}
+
+function getEventUrl(event: BandsintownEvent) {
+  return isValidUrl(event.url) ? event.url : undefined;
+}
+
+function getVenueUrl(event: BandsintownEvent) {
+  return isValidUrl(event.venue?.url) ? event.venue?.url : undefined;
+}
+
+function isValidUrl(url?: string) {
+  if (!url) return false;
+
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function sortAscendingByDatetime(eventA: BandsintownEvent, eventB: BandsintownEvent) {
+  return eventA.datetime.localeCompare(eventB.datetime);
+}
+
+function sortDescendingByDatetime(eventA: BandsintownEvent, eventB: BandsintownEvent) {
+  return eventB.datetime.localeCompare(eventA.datetime);
+}
+
+function groupPastEventsByYear(events: BandsintownEvent[]) {
+  return events.reduce<Record<string, BandsintownEvent[]>>((groups, event) => {
+    const { year } = getLocalDateParts(event.datetime);
+    const groupYear = year || "Earlier";
+
+    groups[groupYear] = groups[groupYear] ?? [];
+    groups[groupYear].push(event);
+
+    return groups;
+  }, {});
+}
+
+function SectionHeading({ children, id }: { children: React.ReactNode; id: string }) {
   return (
-    <li className="grid gap-1.5 border-t border-border/60 py-2.5 text-foreground/90 md:min-h-11 md:grid-cols-[8rem_minmax(0,1.7fr)_minmax(13rem,0.9fr)] md:items-center md:gap-6 md:py-2">
-      <span className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground md:text-[0.8rem]">
-        {show.date}
-      </span>
-      <span className="font-serif text-base leading-snug text-[hsl(25_30%_25%)]/90 md:text-lg">
-        {show.venue}
-      </span>
-      <span className="text-sm leading-5 text-muted-foreground/86">
-        {location}
-      </span>
-    </li>
-  );
-}
-
-function PastShowRow({ show, year }: { show: Show; year: string }) {
-  const location = show.city === "—" ? show.country : `${show.city}, ${show.country}`;
-
-  return (
-    <li className="grid gap-1 border-t border-border/55 py-2 text-foreground/90 sm:grid-cols-[5.5rem_minmax(0,1fr)] sm:items-baseline sm:gap-4">
-      <span className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground md:text-[0.8rem]">
-        {show.date} {year}
-      </span>
-      <span className="min-w-0">
-        <span className="block truncate font-serif text-[0.98rem] leading-snug text-[hsl(25_30%_25%)]/90 md:text-base">
-          {show.venue}
-        </span>
-        <span className="block truncate text-xs leading-5 text-muted-foreground/82 md:text-[0.82rem]">
-          {location}
-        </span>
-      </span>
-    </li>
-  );
-}
-
-function PastShowYearSection({ group, isFirst = false }: { group: ShowYear; isFirst?: boolean }) {
-  return (
-    <section
-      aria-labelledby={`past-shows-${group.year}`}
-      className={isFirst ? "" : "mt-10 md:mt-14"}
+    <h3
+      id={id}
+      className="text-center font-serif text-3xl font-semibold uppercase leading-tight tracking-[0.07em] text-foreground md:text-4xl"
     >
-      <div className="mb-3 border-t border-border/75 pt-4 md:mb-4 md:pt-5">
-        <h3
-          id={`past-shows-${group.year}`}
-          className="text-[0.95rem] font-semibold uppercase tracking-[0.25em] text-foreground/70"
-        >
-          {group.year}
-        </h3>
+      {children}
+    </h3>
+  );
+}
+
+function EventRow({
+  event,
+  isFirst = false,
+  showEventAction = false,
+  showTickets = false,
+}: {
+  event: BandsintownEvent;
+  isFirst?: boolean;
+  showEventAction?: boolean;
+  showTickets?: boolean;
+}) {
+  const formattedDateTime = formatLocalDateTime(event.datetime);
+  const eventName = getEventName(event);
+  const venueName = getVenueName(event);
+  const location = getLocation(event);
+  const eventUrl = getEventUrl(event);
+  const venueUrl = getVenueUrl(event);
+  const ticketUrl = showTickets ? getTicketUrl(event) : undefined;
+  const shouldShowActions = showEventAction && (eventUrl || ticketUrl);
+
+  return (
+    <li
+      className={`grid gap-4 py-4 text-foreground md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:gap-8 lg:py-5 ${
+        isFirst ? "" : "border-t border-[hsl(40_20%_72%)]/75"
+      }`}
+    >
+      <div className="min-w-0">
+        {formattedDateTime && (
+          <p className="text-sm font-semibold uppercase leading-5 tracking-[0.1em] text-[hsl(25_30%_25%)] md:text-[0.95rem]">
+            {formattedDateTime}
+          </p>
+        )}
+        {location && (
+          <p className="mt-0.5 text-sm leading-5 text-muted-foreground md:text-[0.95rem]">
+            {location}
+          </p>
+        )}
+        <p className="mt-3 text-base font-semibold leading-snug text-[hsl(25_30%_25%)] md:text-lg">
+          {eventUrl ? (
+            <a
+              href={eventUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline decoration-transparent underline-offset-4 transition-colors duration-300 hover:text-primary/75 hover:decoration-primary/35"
+            >
+              {eventName}
+            </a>
+          ) : (
+            eventName
+          )}
+        </p>
+        {venueName && (
+          <p className="mt-0.5 text-sm leading-5 text-muted-foreground/90 md:text-[0.95rem]">
+            {venueUrl ? (
+              <a
+                href={venueUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline decoration-transparent underline-offset-4 transition-colors duration-300 hover:text-primary/75 hover:decoration-primary/30"
+              >
+                {venueName}
+              </a>
+            ) : (
+              venueName
+            )}
+          </p>
+        )}
       </div>
-      <ul>
-        {group.shows.map((show) => (
-          <PastShowRow
-            key={`${group.year}-${show.date}-${show.venue}`}
-            show={show}
-            year={group.year}
-          />
-        ))}
-      </ul>
-    </section>
+
+      {shouldShowActions && (
+        <div className="flex flex-wrap items-center gap-3 md:justify-end">
+          {eventUrl && (
+            <a
+              href={eventUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-9 items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-primary/80 transition-colors duration-300 hover:text-primary"
+            >
+              Event
+              <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+            </a>
+          )}
+          {ticketUrl && (
+            <a
+              href={ticketUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-9 items-center justify-center border border-primary bg-primary px-4 text-xs font-semibold uppercase tracking-[0.16em] text-primary-foreground transition-colors duration-300 hover:bg-transparent hover:text-primary"
+            >
+              Tickets
+            </a>
+          )}
+        </div>
+      )}
+    </li>
+  );
+}
+
+function EventList({
+  emptyMessage,
+  events,
+  showEventAction = false,
+  showTickets = false,
+}: {
+  emptyMessage: string;
+  events: BandsintownEvent[];
+  showEventAction?: boolean;
+  showTickets?: boolean;
+}) {
+  if (events.length === 0) {
+    return (
+      <p className="py-5 text-center text-sm italic text-muted-foreground">
+        {emptyMessage}
+      </p>
+    );
+  }
+
+  return (
+    <ul className="border-b border-[hsl(40_20%_72%)]/70">
+      {events.map((event, index) => (
+        <EventRow
+          key={event.id}
+          event={event}
+          isFirst={index === 0}
+          showEventAction={showEventAction}
+          showTickets={showTickets}
+        />
+      ))}
+    </ul>
   );
 }
 
 export default function TourPage() {
+  const [{ upcoming, past, isLoading, error }, setTourState] = useState<TourState>({
+    upcoming: [],
+    past: [],
+    isLoading: true,
+    error: null,
+  });
+  const [areOlderShowsOpen, setAreOlderShowsOpen] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    Promise.allSettled([fetchEvents("upcoming", controller.signal), fetchEvents("past", controller.signal)])
+      .then(([upcomingResult, pastResult]) => {
+        if (controller.signal.aborted) return;
+
+        const nextUpcoming = upcomingResult.status === "fulfilled" ? upcomingResult.value : [];
+        const nextPast = pastResult.status === "fulfilled" ? pastResult.value : [];
+        const hasError = upcomingResult.status === "rejected" || pastResult.status === "rejected";
+
+        setTourState({
+          upcoming: [...nextUpcoming].sort(sortAscendingByDatetime),
+          past: [...nextPast].sort(sortDescendingByDatetime),
+          isLoading: false,
+          error: hasError ? "Some tour dates could not be loaded right now." : null,
+        });
+      })
+      .catch(() => {
+        if (controller.signal.aborted) return;
+
+        setTourState({
+          upcoming: [],
+          past: [],
+          isLoading: false,
+          error: "Tour dates could not be loaded right now.",
+        });
+      });
+
+    return () => {
+      controller.abort();
+    };
+  }, []);
+
+  const recentPastShows = useMemo(() => past.slice(0, 3), [past]);
+  const olderPastShows = useMemo(() => past.slice(3), [past]);
+
+  const olderPastShowsByYear = useMemo(() => {
+    const groupedEvents = groupPastEventsByYear(olderPastShows);
+
+    return Object.entries(groupedEvents)
+      .sort(([yearA], [yearB]) => Number(yearB) - Number(yearA))
+      .map(([year, events]) => ({
+        year,
+        events: [...events].sort(sortDescendingByDatetime),
+      }));
+  }, [olderPastShows]);
+
   return (
     <>
-      <PageBanner compact />
+      <div className="min-h-[calc(100vh-5rem)] flex-1 bg-[#F4F0E8] md:min-h-[calc(100vh-6rem)]">
+        <div className="container mx-auto max-w-5xl px-4 pb-16 pt-16 sm:px-6 md:px-10 md:pb-20 md:pt-24 lg:px-12">
+          <Reveal>
+            <div className="mx-auto">
+              {error && !isLoading && (
+                <p className="mb-10 py-4 text-center text-sm italic text-muted-foreground">
+                  {error}
+                </p>
+              )}
 
-      <div className="container mx-auto max-w-7xl px-6 py-12 md:px-10 md:py-16 lg:px-12">
-        <Reveal>
-          <section
-            aria-labelledby="upcoming-shows-heading"
-            className="mx-auto"
-          >
-            <div className="mb-5 text-center">
-              <h2
-                id="upcoming-shows-heading"
-                className="font-serif text-2xl font-normal uppercase leading-tight tracking-[0.16em] text-foreground md:text-3xl"
-              >
-                Upcoming Shows
-              </h2>
-            </div>
-
-            <ul className="border-b border-border/60">
-              {upcomingShows.map((show) => (
-                <UpcomingShowRow key={`${show.date}-${show.venue}`} show={show} />
-              ))}
-            </ul>
-          </section>
-        </Reveal>
-
-        <div className="my-10 flex justify-center md:my-12">
-          <div className="h-px w-24 bg-border" />
-        </div>
-
-        <Reveal delay={100}>
-          <section aria-labelledby="past-shows-heading">
-            <div className="mb-8 text-center">
-              <h2
-                id="past-shows-heading"
-                className="font-serif text-2xl font-normal uppercase leading-tight tracking-[0.16em] text-foreground md:text-3xl"
-              >
-                Past Shows
-              </h2>
-            </div>
-
-            <div className="md:hidden">
-              {pastShowsByYear.map((group, index) => (
-                <PastShowYearSection key={group.year} group={group} isFirst={index === 0} />
-              ))}
-            </div>
-
-            <div className="hidden md:grid md:grid-cols-2 md:gap-x-10 lg:gap-x-14">
-              {pastShowColumns.map((column, columnIndex) => (
-                <div key={columnIndex}>
-                  {column.map((group, index) => (
-                    <PastShowYearSection key={group.year} group={group} isFirst={index === 0} />
-                  ))}
+              <section aria-labelledby="upcoming-shows-heading">
+                <div className="mb-7 md:mb-9">
+                  <SectionHeading id="upcoming-shows-heading">Upcoming Shows</SectionHeading>
                 </div>
-              ))}
+                {isLoading ? (
+                  <p className="py-5 text-center text-sm italic text-muted-foreground">
+                    Loading tour dates...
+                  </p>
+                ) : (
+                  <EventList
+                    emptyMessage="No upcoming shows at the moment."
+                    events={upcoming}
+                    showEventAction
+                    showTickets
+                  />
+                )}
+              </section>
+
+              {!isLoading && (
+                <section aria-labelledby="past-shows-heading" className="mt-16 md:mt-20">
+                  <div className="mb-7 md:mb-9">
+                    <SectionHeading id="past-shows-heading">Past Shows</SectionHeading>
+                  </div>
+
+                  <EventList
+                    emptyMessage="Past shows are temporarily unavailable."
+                    events={recentPastShows}
+                  />
+
+                  {olderPastShows.length > 0 && (
+                    <>
+                      {areOlderShowsOpen && (
+                        <div id="older-past-shows-panel" className="mt-8 space-y-8 md:mt-9 md:space-y-9">
+                          {olderPastShowsByYear.map((group) => (
+                            <section key={group.year} aria-labelledby={`past-shows-${group.year}`}>
+                              <h4
+                                id={`past-shows-${group.year}`}
+                                className="mb-2 border-t border-[hsl(40_20%_72%)]/80 pt-4 text-sm font-semibold uppercase tracking-[0.22em] text-foreground/70"
+                              >
+                                {group.year}
+                              </h4>
+                              <EventList emptyMessage="No past shows." events={group.events} />
+                            </section>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="mt-6 flex justify-center md:mt-7">
+                        <button
+                          type="button"
+                          aria-expanded={areOlderShowsOpen}
+                          aria-controls="older-past-shows-panel"
+                          className="group inline-flex cursor-pointer items-center gap-2 border-b border-primary/20 pb-1 text-xs font-semibold uppercase tracking-[0.18em] text-primary/68 transition-colors duration-300 hover:border-primary/45 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-4 focus-visible:ring-offset-[#F4F0E8]"
+                          onClick={() => setAreOlderShowsOpen((isOpen) => !isOpen)}
+                        >
+                          {areOlderShowsOpen ? "Hide older shows" : "View all past shows"}
+                          <ChevronDown
+                            className={`h-4 w-4 transition-transform duration-300 ${
+                              areOlderShowsOpen ? "rotate-180" : ""
+                            }`}
+                            aria-hidden="true"
+                          />
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </section>
+              )}
             </div>
-          </section>
-        </Reveal>
+          </Reveal>
+        </div>
       </div>
     </>
   );

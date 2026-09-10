@@ -11,14 +11,6 @@ export function SiteLayout({ children }: SiteLayoutProps) {
   const location = useLocation();
   const isHomePage = location.pathname === "/";
   const isContactPage = location.pathname === "/contact";
-  const isOverlayNav =
-    isHomePage ||
-    location.pathname === "/about" ||
-    location.pathname === "/tour" ||
-    location.pathname === "/media" ||
-    location.pathname === "/contact" ||
-    location.pathname === "/our-story" ||
-    location.pathname === "/our-sound";
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
@@ -26,7 +18,7 @@ export function SiteLayout({ children }: SiteLayoutProps) {
       <Navigation />
       <main
         id="main"
-        className={!isOverlayNav ? "pt-12" : ""}
+        className="flex flex-1 flex-col"
       >
         {children}
       </main>

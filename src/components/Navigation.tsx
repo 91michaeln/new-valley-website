@@ -7,15 +7,7 @@ import { cn } from "@/lib/utils";
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const { pathname } = useLocation();
-  const isHome = pathname === "/";
-  const isOverlayNav =
-    isHome ||
-    pathname === "/about" ||
-    pathname === "/tour" ||
-    pathname === "/media" ||
-    pathname === "/contact" ||
-    pathname === "/our-story" ||
-    pathname === "/our-sound";
+  const isOverlayNav = pathname === "/";
   // Adjust this value to fine-tune desktop nav vertical alignment with the logo.
   // Example: "1.4rem" higher, "1.7rem" lower.
   const desktopNavYOffset = "1.40rem";
@@ -41,17 +33,23 @@ export function Navigation() {
   };
 
   return (
-    <header className="w-full overflow-visible">
-      <nav className="w-full relative">
+    <header
+      className={cn(
+        "relative z-50 w-full overflow-visible",
+        !isOverlayNav && "bg-background"
+      )}
+    >
+      <nav className="relative w-full">
         <div
           className={cn(
-            "relative flex items-center h-[var(--nav-h)] px-4 md:px-6 overflow-visible",
-            "mx-auto max-w-6xl",
-            isOverlayNav && "absolute top-0 left-0 right-0 z-50 bg-transparent"
+            "relative flex overflow-visible px-4 md:px-6",
+            isOverlayNav
+              ? "absolute left-0 right-0 top-0 z-50 mx-auto h-[var(--nav-h)] w-full max-w-[1720px] items-center bg-transparent md:px-10 lg:px-16 xl:px-20 2xl:px-24"
+              : "mx-auto h-20 w-full max-w-[1720px] items-start bg-background md:h-24 md:px-10 lg:px-16 xl:px-20 2xl:px-24"
           )}
         >
         {/* Content wrapper above the lines */}
-        <div className="relative z-20 flex items-center w-full">
+        <div className="relative z-20 flex h-[var(--nav-h)] w-full items-center">
         {/* Brand Logo */}
         <Link to="/" aria-label="New Valley String Band" className="relative shrink-0">
           <div className={cn(
@@ -59,95 +57,101 @@ export function Navigation() {
             "-bottom-4",
             isOverlayNav ? "bg-transparent" : "bg-background"
           )} />
-          <img
-            src={isOverlayNav ? "/images/logo-white.png" : "/images/logo-black.png"}
-            alt="New Valley String Band"
+          <span
+            aria-hidden="true"
             className={cn(
-              "h-12 md:h-[4.5rem] lg:h-[5.5rem] w-auto block relative",
-              "translate-y-[22.5px] md:translate-y-[27.5px] lg:translate-y-[31.5px]"
+              "relative block aspect-[824/303] h-12 translate-y-[22.5px] md:h-[4.5rem] md:translate-y-[27.5px] lg:h-[5.5rem] lg:translate-y-[31.5px]",
+              isOverlayNav ? "bg-white" : "bg-primary"
             )}
-            loading="eager"
-            decoding="async"
+            style={{
+              WebkitMask: "url('/images/logo-white.png') center / contain no-repeat",
+              mask: "url('/images/logo-white.png') center / contain no-repeat",
+            }}
           />
+          <span className="sr-only">New Valley String Band</span>
         </Link>
 
         {/* Desktop Navigation + Social Icons – aligned right */}
         <div
-          className="relative ml-auto hidden items-center gap-6 pb-3 md:flex"
+          className={cn(
+            "relative ml-auto hidden w-[75%] max-w-[1280px] flex-col items-stretch justify-center pb-3 md:flex"
+          )}
           style={{ transform: `translateY(${desktopNavYOffset})` }}
         >
           {/* Desktop Navigation Links */}
-          <div className="hidden items-center gap-5 md:flex md:gap-7">
-            {navLinks.map((link) => {
-              const active = isLinkActive(link.to);
+          <div className="flex items-center justify-end gap-6">
+            <div className="flex items-center gap-5 md:gap-7">
+              {navLinks.map((link) => {
+                const active = isLinkActive(link.to);
 
-              return (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className={cn(
-                    "group relative inline-flex pb-1 text-xs font-medium uppercase tracking-wide transition-colors duration-300 md:text-[0.95rem]",
-                    isOverlayNav
-                      ? "text-white/95 hover:text-white"
-                      : active
-                        ? "text-accent"
-                        : "text-foreground hover:text-foreground/80"
-                  )}
-                  style={isOverlayNav ? { textShadow: "0 1px 2px rgba(0,0,0,0.6)" } : undefined}
-                >
-                  {link.label}
-                  <span
-                    aria-hidden="true"
+                return (
+                  <Link
+                    key={link.to}
+                    to={link.to}
                     className={cn(
-                      "pointer-events-none absolute inset-x-0 -bottom-0.5 h-px origin-center scale-x-75 opacity-0 transition-all duration-300",
-                      active && "scale-x-100 opacity-100",
-                      isOverlayNav ? "bg-white/70" : "bg-primary/45"
+                      "inline-flex pb-1 text-xs uppercase tracking-wide transition-colors duration-300 md:text-[0.95rem]",
+                      active ? "font-semibold" : "font-medium",
+                      isOverlayNav
+                        ? active
+                          ? "text-white"
+                          : "text-white/95 hover:text-white"
+                        : active
+                          ? "text-primary"
+                          : "text-primary/76 hover:text-primary"
                     )}
-                  />
-                </Link>
-              );
-            })}
+                    style={isOverlayNav ? { textShadow: "0 1px 2px rgba(0,0,0,0.6)" } : undefined}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Social Icons */}
+            <div className="ml-4 flex items-center gap-4">
+            <a
+              href="https://www.youtube.com/@newvalleystringband9941"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="YouTube"
+              className={cn(
+                "hidden transition-colors md:inline-block",
+                isOverlayNav ? "text-white hover:text-white/80" : "text-primary hover:text-primary/80"
+              )}
+            >
+              <Youtube className="h-5 w-5" />
+            </a>
+            <a
+              href="https://www.instagram.com/new_valley_string_band/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className={cn(
+                "hidden transition-colors md:inline-block",
+                isOverlayNav ? "text-white hover:text-white/80" : "text-primary hover:text-primary/80"
+              )}
+            >
+              <Instagram className="h-5 w-5" />
+            </a>
+            <a
+              href="https://www.facebook.com/newvalleystringband"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+              className={cn(
+                "hidden transition-colors md:inline-block",
+                isOverlayNav ? "text-white hover:text-white/80" : "text-primary hover:text-primary/80"
+              )}
+            >
+              <Facebook className="h-5 w-5" />
+            </a>
+            </div>
           </div>
 
-          {/* Social Icons */}
-          <div className="flex items-center gap-4 ml-4">
-          <a
-            href="https://www.youtube.com/@newvalleystringband9941"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="YouTube"
-            className={cn(
-              "transition-colors hidden md:inline-block",
-              isOverlayNav ? "text-white hover:text-white/80" : "text-foreground hover:text-foreground/80"
-            )}
-          >
-            <Youtube className="h-5 w-5" />
-          </a>
-          <a
-            href="https://www.instagram.com/new_valley_string_band/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Instagram"
-            className={cn(
-              "transition-colors hidden md:inline-block",
-              isOverlayNav ? "text-white hover:text-white/80" : "text-foreground hover:text-foreground/80"
-            )}
-          >
-            <Instagram className="h-5 w-5" />
-          </a>
-          <a
-            href="https://www.facebook.com/newvalleystringband"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Facebook"
-            className={cn(
-              "transition-colors hidden md:inline-block",
-              isOverlayNav ? "text-white hover:text-white/80" : "text-foreground hover:text-foreground/80"
-            )}
-          >
-            <Facebook className="h-5 w-5" />
-          </a>
-          </div>
+          <div
+            aria-hidden="true"
+            className={cn("mt-4 h-px w-full", isOverlayNav ? "bg-white/[0.58]" : "bg-primary/[0.35]")}
+          />
 
         </div>
 
@@ -156,7 +160,9 @@ export function Navigation() {
           size="sm"
           className={cn(
             "ml-auto h-8 w-8 p-0 md:hidden",
-            isOverlayNav && "text-white/90 hover:text-white"
+            isOverlayNav
+              ? "text-white/90 hover:text-white"
+              : "text-primary hover:text-primary"
           )}
           onClick={() => setIsOpen(!isOpen)}
           aria-expanded={isOpen}
@@ -175,7 +181,7 @@ export function Navigation() {
           id="mobile-menu"
           className={cn(
             "absolute left-0 right-0 top-full border-t lg:hidden",
-            "bg-background shadow-lg"
+            "bg-background"
           )}
         >
           <div className="container mx-auto flex flex-col gap-4 px-6 py-6">
@@ -185,7 +191,7 @@ export function Navigation() {
                 to={link.to}
                 className={cn(
                   "text-lg font-medium transition-colors hover:text-accent",
-                  pathname === link.to
+                  isLinkActive(link.to)
                     ? "text-accent"
                     : "text-foreground"
                 )}

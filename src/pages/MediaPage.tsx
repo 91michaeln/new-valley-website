@@ -1,5 +1,4 @@
 import { Reveal } from "@/components/Reveal";
-import { PageBanner } from "@/components/PageBanner";
 import { Download } from "lucide-react";
 import { useState } from "react";
 
@@ -103,8 +102,6 @@ export default function MediaPage() {
 
   return (
     <>
-      <PageBanner compact />
-
       <div className="container mx-auto max-w-7xl px-6 py-12 md:px-10 md:py-16 lg:px-12">
         <section>
           <Reveal>

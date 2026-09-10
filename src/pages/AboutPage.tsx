@@ -1,5 +1,3 @@
-import { PageBanner } from "@/components/PageBanner";
-
 const pressQuotes = [
   {
     quote:
@@ -17,10 +15,8 @@ const pressQuotes = [
 export default function AboutPage() {
   return (
     <>
-      <PageBanner compact mobileSolidBrown />
-
-      <section className="bg-background text-primary">
-        <div className="container mx-auto px-6 pb-20 pt-12 md:px-10 md:pb-24 md:pt-16 lg:px-10 lg:pb-28 lg:pt-12 xl:px-16">
+      <section className="min-h-[calc(100vh-5rem)] bg-background text-primary md:min-h-[calc(100vh-6rem)]">
+        <div className="container mx-auto px-6 pb-20 pt-16 md:px-10 md:pb-24 md:pt-24 lg:px-10 lg:pb-28 lg:pt-24 xl:px-16">
           <div className="mx-auto max-w-[1500px]">
             <div className="flex flex-col gap-16 md:flex-row md:items-start md:justify-center md:gap-12 lg:gap-10 xl:gap-12">
               <div className="min-w-0 text-left md:flex-1 lg:flex-[1_1_680px]">

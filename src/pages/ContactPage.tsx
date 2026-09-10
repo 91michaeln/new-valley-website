@@ -1,12 +1,9 @@
 import { Reveal } from "@/components/Reveal";
 import { Contact } from "@/components/Contact";
-import { PageBanner } from "@/components/PageBanner";
 
 export default function ContactPage() {
   return (
     <>
-      <PageBanner compact />
-
       <section className="bg-background text-primary">
         <div className="container mx-auto max-w-7xl px-6 py-16 md:px-10 md:py-20 lg:px-16 lg:py-24">
           <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-18 xl:gap-24">
