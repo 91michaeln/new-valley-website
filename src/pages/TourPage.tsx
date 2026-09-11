@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { ChevronDown, ExternalLink } from "lucide-react";
+import { ChevronDown, Copy, ExternalLink, Mail, Share2 } from "lucide-react";
+import { FaFacebookF, FaXTwitter } from "react-icons/fa6";
 import { Reveal } from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const ARTIST_ID = "id_15664360";
 const BANDSINTOWN_APP_ID = "de1455a037e5fa714d2b6bacee6fd8c6";
@@ -123,6 +125,10 @@ function getEventUrl(event: BandsintownEvent) {
   return isValidUrl(event.url) ? event.url : undefined;
 }
 
+function getShareUrl(event: BandsintownEvent) {
+  return getEventUrl(event) ?? getTicketUrl(event) ?? getVenueUrl(event) ?? window.location.href;
+}
+
 function getVenueUrl(event: BandsintownEvent) {
   return isValidUrl(event.venue?.url) ? event.venue?.url : undefined;
 }
@@ -158,6 +164,10 @@ function groupPastEventsByYear(events: BandsintownEvent[]) {
   }, {});
 }
 
+function buildShareText(eventName: string, location: string, formattedDateTime: string) {
+  return [eventName, location, formattedDateTime].filter(Boolean).join(" - ");
+}
+
 function SectionHeading({ children, id }: { children: React.ReactNode; id: string }) {
   return (
     <h3
@@ -170,16 +180,21 @@ function SectionHeading({ children, id }: { children: React.ReactNode; id: strin
 }
 
 function EventRow({
+  activeShareEventId,
   event,
   isFirst = false,
+  onShareOpenChange,
   showEventAction = false,
   showTickets = false,
 }: {
+  activeShareEventId?: string | null;
   event: BandsintownEvent;
   isFirst?: boolean;
+  onShareOpenChange?: (eventId: string | null) => void;
   showEventAction?: boolean;
   showTickets?: boolean;
 }) {
+  const [hasCopiedShareUrl, setHasCopiedShareUrl] = useState(false);
   const formattedDateTime = formatLocalDateTime(event.datetime);
   const eventName = getEventName(event);
   const venueName = getVenueName(event);
@@ -187,11 +202,42 @@ function EventRow({
   const eventUrl = getEventUrl(event);
   const venueUrl = getVenueUrl(event);
   const ticketUrl = showTickets ? getTicketUrl(event) : undefined;
-  const shouldShowActions = showEventAction && (eventUrl || ticketUrl);
+  const shouldShowActions = showEventAction;
+  const isShareMenuOpen = activeShareEventId === event.id;
+  const shareUrl = getShareUrl(event);
+  const shareText = buildShareText(eventName, location, formattedDateTime);
+  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+  const xShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(
+    shareUrl,
+  )}`;
+  const emailShareUrl = `mailto:?subject=${encodeURIComponent(
+    `New Valley String Band - ${eventName}`,
+  )}&body=${encodeURIComponent([eventName, location, formattedDateTime, shareUrl].filter(Boolean).join("\n"))}`;
+
+  useEffect(() => {
+    if (!hasCopiedShareUrl) return;
+
+    const timeoutId = window.setTimeout(() => {
+      setHasCopiedShareUrl(false);
+    }, 1800);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [hasCopiedShareUrl]);
+
+  async function handleCopyShareUrl() {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setHasCopiedShareUrl(true);
+    } catch {
+      setHasCopiedShareUrl(false);
+    }
+  }
 
   return (
     <li
-      className={`grid gap-4 py-4 text-foreground md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:gap-8 lg:py-5 ${
+      className={`grid gap-4 px-3 py-4 text-foreground transition-colors duration-200 hover:bg-primary/5 sm:px-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:gap-8 lg:py-5 ${
         isFirst ? "" : "border-t border-[hsl(40_20%_72%)]/75"
       }`}
     >
@@ -240,6 +286,64 @@ function EventRow({
 
       {shouldShowActions && (
         <div className="flex flex-wrap items-center gap-3 md:justify-end">
+          <Popover
+            open={isShareMenuOpen}
+            onOpenChange={(isOpen) => {
+              onShareOpenChange?.(isOpen ? event.id : null);
+            }}
+          >
+            <PopoverTrigger asChild>
+              <Button
+                variant="cta"
+                size="icon"
+                type="button"
+                aria-label="Share event"
+                className="h-9 w-9 rounded-none border-primary/25 bg-transparent text-primary shadow-none hover:border-primary/55 hover:bg-primary/10"
+              >
+                <Share2 className="h-4 w-4" aria-hidden="true" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent
+              align="end"
+              collisionPadding={16}
+              sideOffset={8}
+              className="w-44 rounded-none border-primary/25 bg-[#F4F0E8] p-1.5 text-primary shadow-lg shadow-primary/10"
+            >
+              <a
+                href={facebookShareUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-2.5 py-2 text-sm leading-none transition-colors hover:bg-primary/10"
+              >
+                <FaFacebookF className="h-4 w-4" aria-hidden="true" />
+                Facebook
+              </a>
+              <a
+                href={xShareUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-2.5 py-2 text-sm leading-none transition-colors hover:bg-primary/10"
+              >
+                <FaXTwitter className="h-4 w-4" aria-hidden="true" />
+                X
+              </a>
+              <a
+                href={emailShareUrl}
+                className="flex items-center gap-2 px-2.5 py-2 text-sm leading-none transition-colors hover:bg-primary/10"
+              >
+                <Mail className="h-4 w-4" aria-hidden="true" />
+                Email
+              </a>
+              <button
+                type="button"
+                className="flex w-full items-center gap-2 px-2.5 py-2 text-left text-sm leading-none transition-colors hover:bg-primary/10"
+                onClick={handleCopyShareUrl}
+              >
+                <Copy className="h-4 w-4" aria-hidden="true" />
+                {hasCopiedShareUrl ? "Copied!" : "Copy link"}
+              </button>
+            </PopoverContent>
+          </Popover>
           {eventUrl && (
             <Button asChild variant="cta" size="cta" className="h-9 px-4">
               <a
@@ -280,6 +384,8 @@ function EventList({
   showEventAction?: boolean;
   showTickets?: boolean;
 }) {
+  const [activeShareEventId, setActiveShareEventId] = useState<string | null>(null);
+
   if (events.length === 0) {
     return (
       <p className="py-5 text-center text-sm italic text-muted-foreground">
@@ -293,8 +399,10 @@ function EventList({
       {events.map((event, index) => (
         <EventRow
           key={event.id}
+          activeShareEventId={activeShareEventId}
           event={event}
           isFirst={index === 0}
+          onShareOpenChange={setActiveShareEventId}
           showEventAction={showEventAction}
           showTickets={showTickets}
         />

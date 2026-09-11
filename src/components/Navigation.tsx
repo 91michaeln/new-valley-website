@@ -51,7 +51,11 @@ export function Navigation() {
         {/* Content wrapper above the lines */}
         <div className="relative z-20 flex h-[var(--nav-h)] w-full items-center">
         {/* Brand Logo */}
-        <Link to="/" aria-label="New Valley String Band" className="relative shrink-0">
+        <Link
+          to="/"
+          aria-label="New Valley String Band"
+          className={cn("relative shrink-0", isOpen && "max-md:invisible")}
+        >
           <div className={cn(
             "absolute inset-0",
             "-bottom-4",
@@ -160,6 +164,7 @@ export function Navigation() {
           size="sm"
           className={cn(
             "ml-auto h-8 w-8 p-0 md:hidden",
+            isOpen && "invisible",
             isOverlayNav
               ? "text-white/90 hover:text-white"
               : "text-primary hover:text-primary"
@@ -180,11 +185,35 @@ export function Navigation() {
         <div
           id="mobile-menu"
           className={cn(
-            "absolute left-0 right-0 top-full border-t lg:hidden",
-            "bg-background"
+            "fixed inset-x-0 top-0 z-[100] border-b border-primary/20 md:hidden",
+            "bg-background text-primary shadow-sm"
           )}
         >
-          <div className="container mx-auto flex flex-col gap-4 px-6 py-6">
+          <div className="container mx-auto flex min-h-[var(--nav-h)] items-center px-4 sm:px-6">
+            <Link to="/" aria-label="New Valley String Band" className="relative shrink-0">
+              <span
+                aria-hidden="true"
+                className="relative block aspect-[824/303] h-12 translate-y-[22.5px] bg-primary"
+                style={{
+                  WebkitMask: "url('/images/logo-white.png') center / contain no-repeat",
+                  mask: "url('/images/logo-white.png') center / contain no-repeat",
+                }}
+              />
+              <span className="sr-only">New Valley String Band</span>
+            </Link>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              className="ml-auto h-8 w-8 p-0 text-primary hover:text-primary"
+              onClick={() => setIsOpen(false)}
+              aria-label="Close menu"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
+
+          <div className="container mx-auto flex flex-col gap-4 px-6 pb-6 pt-5">
             {navLinks.map((link) => (
               <Link
                 key={link.to}
@@ -200,8 +229,8 @@ export function Navigation() {
               </Link>
             ))}
 
-            <div className="mt-4 flex items-center gap-3 border-t pt-4">
-              <Button variant="ghost" size="icon" asChild>
+            <div className="mt-4 flex items-center gap-3 border-t border-primary/20 pt-4">
+              <Button variant="ghost" size="icon" className="text-primary hover:text-primary" asChild>
                 <a
                   href="https://www.youtube.com/@newvalleystringband9941"
                   target="_blank"
@@ -211,7 +240,7 @@ export function Navigation() {
                   <Youtube className="h-5 w-5" />
                 </a>
               </Button>
-              <Button variant="ghost" size="icon" asChild>
+              <Button variant="ghost" size="icon" className="text-primary hover:text-primary" asChild>
                 <a
                   href="https://www.instagram.com/new_valley_string_band/"
                   target="_blank"
@@ -221,7 +250,7 @@ export function Navigation() {
                   <Instagram className="h-5 w-5" />
                 </a>
               </Button>
-              <Button variant="ghost" size="icon" asChild>
+              <Button variant="ghost" size="icon" className="text-primary hover:text-primary" asChild>
                 <a
                   href="https://www.facebook.com/newvalleystringband"
                   target="_blank"
